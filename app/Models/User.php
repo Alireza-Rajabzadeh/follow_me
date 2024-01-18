@@ -53,4 +53,14 @@ class User extends Authenticatable
     {
         return $this->hasOne(UsersCredit::class, 'user_id', 'id');
     }
+
+    /**
+     * Get the user associated with the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function page(): HasOne
+    {
+        return $this->hasOne(UserPage::class, 'user_id', 'id');
+    }
 }
