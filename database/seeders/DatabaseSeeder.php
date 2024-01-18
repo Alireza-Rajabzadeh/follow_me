@@ -21,8 +21,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // UserCereditsSeeders::class,
-            UserPageSeeders::class,
-            PageFollowSeeder::class
+            // UserPageSeeders::class,
+            // PageFollowSeeder::class
+            OrderStatusesSeeder::class,
+            OrderDetailsSeeder::class,
         ]);
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',

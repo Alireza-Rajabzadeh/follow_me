@@ -11,12 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_pages', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('user_id')->unique();
             $table->foreign('user_id')->references('id')->on('users');
-            
-            $table->string("page_id");
+
+
+            $table->unsignedBigInteger('status_id')->unique();
+            $table->foreign('status_id')->references('id')->on('order_statuses');
+
+            $table->string("cost")->default(0);
+
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_pages');
+        Schema::dropIfExists('orders');
     }
 };
