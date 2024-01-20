@@ -73,7 +73,8 @@ class BaseRepository
 
         $result = [
             'total' => $total,
-            'result' => $total,
+            'returned' => count($result),
+            'result' => $result,
         ];
 
         return $result;

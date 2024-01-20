@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthMiddleware
@@ -26,6 +28,10 @@ class AuthMiddleware
             return apiResponse(false, [], __('validation.un_authenticat'));
         }
 
+        $user = User::find(1);
+
+        Auth::login($user);
+        
 
         return $next($request);
     }

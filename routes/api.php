@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 
 
-Route::group(['prefix'=>'test','middleware' => 'authmiddlware'], function(){
-    Route::get('/test', [AuthController::class, 'login']);
-
+Route::group(['prefix'=>'client','middleware' => 'authmiddlware'], function(){
+    Route::get('/orders', [OrderController::class, 'showClientOrders'])->name('show-client-orders');
+    Route::post('/order', [OrderController::class, 'order'])->name('make-order');
 });

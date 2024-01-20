@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('order_id')->unique();
+            $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');
-            $table->unsignedBigInteger('status_id')->unique();
+            $table->unsignedBigInteger('status_id');
             $table->foreign('status_id')->references('id')->on('order_detail_statuses');
             $table->string("order_count");
             $table->string("received_count");
