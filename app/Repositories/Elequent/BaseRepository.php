@@ -44,10 +44,14 @@ class BaseRepository
     {
         $query = $this->model;
 
+        if (!empty($search_inputs['relation'])) {
+
+            $query = $query->with($search_inputs['relation']);
+        }
+
         if (!empty($search_inputs['where'])) {
 
             foreach ($search_inputs['where'] as $key => $value) {
-
                 $query = $query->where($key, $value);
             }
         }
@@ -60,16 +64,21 @@ class BaseRepository
             }
         }
 
-        if (!empty($search_inputs['relation'])) {
-
-            $query = $query->with($search_inputs['relation']);
-        }
+ 
 
         $total = $query->count();
 
+        $dump =  $search_inputs['dump'] ?? false;
         $offset =  $search_inputs['offset'] ?? 0;
         $limit =  $search_inputs['limit'] ?? 10;
-        $result = $query->skip($offset)->take($limit)->get()->toArray();
+
+        $result = $dump ?  $query->skip($offset)->take($limit)->get()->toArray()
+            : $query->get()->toArray();
+
+        if ($dump) {
+            $result = $query->skip($offset)->take($limit)->get()->toArray();
+        }
+
 
         $result = [
             'total' => $total,

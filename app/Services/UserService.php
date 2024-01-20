@@ -11,9 +11,6 @@ use App\Repositories\Elequent\UsersCreditRepository;
 class UserService
 {
     protected $user_repository;
-    protected $tags_repository;
-    protected $categories_repository;
-    protected $status_repository;
 
     public function __construct(UserRepository $user_repository)
     {
@@ -41,8 +38,6 @@ class UserService
 
     public function reduceCredit($requset_data)
     {
-
-
         $this->hasEnouphCredit($requset_data);
 
         $cost = ($requset_data['order_count'] * env("FOLLOW_COST", "4"));
@@ -57,5 +52,37 @@ class UserService
             'user_credit' => $credit_after_order,
             'cost' => $cost
         ];
+    }
+
+    public function increaseCredit($requset_data)
+    {
+        $follow_reward = env("FOLLOW_COIN_REWARD_AMOUNT", "2");
+
+        $credit_after_follow = $this->userCeredit() + $follow_reward;
+        Auth::user()->credit()->update([
+            'coins' => $credit_after_follow
+        ]);
+
+        return [
+            'user_credit' => $credit_after_follow,
+            'reward' => $follow_reward
+        ];
+    }
+
+    public function showUserPageByOrder($request_data)
+    {
+
+        // $user = $this->user_repository->search([
+        //     'where' => [
+        //         'id' => $request_data['available_order']['user_id']
+        //     ],
+        //     'relation' => [
+        //         'page'
+        //     ]
+        // ]);
+
+        $user = $this->user_repository->find($request_data['available_order']['user_id']);
+
+        return $user;
     }
 }

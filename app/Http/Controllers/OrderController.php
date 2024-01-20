@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EmptyRequest;
 use App\Services\UserService;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\EmptyRequest;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\ShowClientOrdersRequest;
+
 
 class OrderController extends Controller
 {
@@ -44,5 +45,13 @@ class OrderController extends Controller
         });
 
         return apiResponse(true, [], 'order accepted . followers will be add to your page .');
+    }
+
+    public function showAvailablePage(EmptyRequest $request)
+    {
+        $request_data = $request->validated();
+        $request_data['available_order'] = $this->order_service->showAvailablePage($request_data);
+        $response["page"] = $this->user_service->showUserPageByOrder($request_data);
+        return apiResponse(true, $response, 'order accepted . followers will be add to your page .');
     }
 }

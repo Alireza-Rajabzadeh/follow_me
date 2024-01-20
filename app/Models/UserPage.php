@@ -16,7 +16,7 @@ class UserPage extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function followedBy()
+    public function following()
     {
         return $this->belongsToMany(UserPage::class, 'pages_followers', 'user_page_id', 'follow_page_id');
     }    
@@ -26,7 +26,7 @@ class UserPage extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function Following()
+    public function followedBy()
     {
         return $this->belongsToMany(UserPage::class, 'pages_followers', 'follow_page_id', 'user_page_id');
     }

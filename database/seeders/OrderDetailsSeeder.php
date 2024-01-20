@@ -21,11 +21,8 @@ class OrderDetailsSeeder extends Seeder
             [
                 'id' => "2",
                 "name" => "inprogress"
-            ],
-                        [
-                'id' => "3",
-                "name" => "new"
             ]
+
         ];
 
         foreach ($order_detail_statuses as $order_detail_status_data) {
