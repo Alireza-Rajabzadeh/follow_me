@@ -51,7 +51,9 @@ class OrderController extends Controller
     {
         $request_data = $request->validated();
         $request_data['available_order'] = $this->order_service->showAvailablePage($request_data);
+
         $response["page"] = $this->user_service->showUserPageByOrder($request_data);
+
         return apiResponse(true, $response, 'order accepted . followers will be add to your page .');
     }
 }

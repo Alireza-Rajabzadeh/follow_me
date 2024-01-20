@@ -105,14 +105,13 @@ class OrderService
             $user = $this->user_repository->find($order['user_id']);
 
 
-            // dd(Auth::user()->page()->first()->id);
+
             $page = $user->page()->first();
             $is_currently_following = ($page->followedBy()->where([
-                "follow_page_id" => Auth::user()->page()->first()->id
+                "user_page_id" => Auth::user()->id
             ]));
 
             if ($is_currently_following->count() != 0) {
-
                 continue;
             }
 
