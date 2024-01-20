@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +19,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+
+Route::post('login', [AuthController::class, 'login'])->name('login');
+
+
+
+Route::group(['prefix'=>'client','middleware' => 'authmiddlware'], function(){
+    Route::get('/availabel_page', [OrderController::class, 'showAvailablePage'])->name('show-available-page');
+    Route::get('/orders', [OrderController::class, 'showClientOrders'])->name('show-client-orders');
+    Route::post('/order', [OrderController::class, 'order'])->name('make-order');
+    Route::post('/follow_page', [PageController::class, 'followPage'])->name('follow-page');
 });

@@ -2,8 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Exception;
 use Throwable;
+use Illuminate\Validation\ValidationException;
+use PHPUnit\Event\Code\Throwable as CodeThrowable;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -24,7 +27,20 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            // dd($e);
         });
+    }
+
+
+    public function render($request, Throwable $exception)
+    {
+
+        if ($exception instanceof ValidationException) {
+
+            return apiResponse(false, [], $exception->getMessage(), 422);
+        }
+
+        return apiResponse(false, [], $exception->getMessage() ?? __('messages.error'), $exception->getCode() ?? 500);
+        // return parent::render($request, $exception);
     }
 }
