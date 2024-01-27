@@ -35,6 +35,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
 
+        // dd($exception);
         if ($exception instanceof ValidationException) {
 
             return apiResponse(false, [], $exception->getMessage(), 422);

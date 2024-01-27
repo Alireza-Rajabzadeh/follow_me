@@ -56,6 +56,12 @@ class BaseRepository
             }
         }
 
+
+        if (!empty($search_inputs['date'])) {
+
+            $query->where($search_inputs['date']['date_field'], '>=', $search_inputs['date']['date_value']);
+        }
+
         if (!empty($search_inputs['like'])) {
 
             foreach ($search_inputs['like'] as $key => $value) {
@@ -66,11 +72,12 @@ class BaseRepository
 
         $total = $query->count();
 
+        $order_by =  $search_inputs['order_by'] ?? "created_at";
         $dump =  $search_inputs['dump'] ?? false;
         $offset =  $search_inputs['offset'] ?? 0;
         $limit =  $search_inputs['limit'] ?? 10;
 
-        $result = $dump ? $query->get()->toArray() :  $query->skip($offset)->take($limit)->get()->toArray() ;
+        $result = $dump ? $query->get()->toArray() :  $query->skip($offset)->take($limit)->orderBy($order_by)->get()->toArray();
 
         $result = [
             'total' => $total,
