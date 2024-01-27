@@ -21,10 +21,7 @@ class PageService
 
     public function isExist($request_data)
     {
-
         $page = $this->page_repository->find($request_data['page_id']);
-
-
         if (empty($page)) {
             throw new Exception("page not found", 422);
         }

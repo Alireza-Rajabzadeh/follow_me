@@ -27,14 +27,23 @@ class PageController extends Controller
 
         $requested_data  = $request->validated();
 
+
+
+
         $transaction_result = DB::transaction(function () use ($requested_data) {
+
+
+            $requested_data['page_id'] = $this->order_service->findOrderUserPageId($requested_data);
+
             $this->page_service->followPage($requested_data);
+
+            $this->order_service->FollowReceived($requested_data);
+
             $increase_credit_data = $this->user_service->increaseCredit($requested_data);
 
             return $increase_credit_data;
         });
 
         return apiResponse(true, $transaction_result);
-
     }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
-use App\Repositories\Elequent\OrderDetailRepository;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Elequent\UserRepository;
 use App\Repositories\Elequent\OrderRepository;
+use App\Repositories\Elequent\OrderDetailRepository;
 
 
 class OrderService
@@ -88,7 +89,14 @@ class OrderService
 
 
         $available_page = null;
+        $available_order = null;
         foreach ($orders['result'] as $order) {
+
+
+            if (empty($order['order_detail'])) {
+
+                continue;
+            }
 
             if ($order['order_detail']['status_id'] != 2) {
                 continue;
@@ -107,19 +115,103 @@ class OrderService
 
 
             $page = $user->page()->first();
+
+
+            if (empty($page)) {
+                continue;
+            }
+
+
             $is_currently_following = ($page->followedBy()->where([
                 "user_page_id" => Auth::user()->id
             ]));
 
             if ($is_currently_following->count() != 0) {
+
                 continue;
             }
 
+            $available_order = $order;
             $available_page = $page;
             break;
         }
 
 
-        return $available_page;
+        if (empty($available_page)) {
+            throw new Exception("no available page", 404);
+        }
+
+
+        $result = [
+            'avialable_page' => $available_page,
+            'order_id' => $available_order['id'],
+        ];
+
+        return $result;
+    }
+
+    function isExist($request_data)
+    {
+        $order = $this->order_repository->find($request_data['order_id']);
+        if (empty($order)) {
+            throw new Exception("Order not found", 1);
+        }
+
+        return $order;
+    }
+
+
+    function findOrderUserPageId($request_data)
+    {
+
+        $order = $this->isExist($request_data);
+
+        $user = ($order->user()->first());
+
+        $page = $user->page()->first();
+
+        return $page->id;
+    }
+
+    function isOrderOpen($order)
+    {
+        $order_detail = $order->orderDetail()->first();
+
+        if (empty($order_detail)) {
+
+            throw new Exception("Order not found", 404);
+        }
+        if (($order_detail->order_count <= $order_detail->received_count) || ($order_detail->status_id == 1)) {
+            throw new Exception("Order not valid", 404);
+        }
+        return $order_detail;
+    }
+
+    function FollowReceived($request_data)
+    {
+
+        $request_data['order'] = $this->isExist($request_data);
+
+        $request_data['order_detail'] = $this->isOrderOpen($request_data['order']);
+
+        $received_count = $request_data['order_detail']->received_count + 1;
+
+        $update_data = [];
+        if ($request_data['order_detail']->order_count == $received_count) {
+            
+            $update_data = [
+                "status_id" => 1,
+                'received_count' => $received_count
+            ];
+        } else {
+            $update_data = [
+                'received_count' => $received_count
+            ];
+        }
+
+
+        $request_data['order_detail']->update($update_data);
+
+        return $request_data;
     }
 }
