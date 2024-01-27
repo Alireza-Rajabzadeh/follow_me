@@ -64,21 +64,13 @@ class BaseRepository
             }
         }
 
- 
-
         $total = $query->count();
 
         $dump =  $search_inputs['dump'] ?? false;
         $offset =  $search_inputs['offset'] ?? 0;
         $limit =  $search_inputs['limit'] ?? 10;
 
-        $result = $dump ?  $query->skip($offset)->take($limit)->get()->toArray()
-            : $query->get()->toArray();
-
-        if ($dump) {
-            $result = $query->skip($offset)->take($limit)->get()->toArray();
-        }
-
+        $result = $dump ? $query->get()->toArray() :  $query->skip($offset)->take($limit)->get()->toArray() ;
 
         $result = [
             'total' => $total,

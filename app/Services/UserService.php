@@ -71,9 +71,11 @@ class UserService
 
     public function showUserPageByOrder($request_data)
     {
-        $user = $this->user_repository->find($request_data['available_order']['user_id']);
 
-        $page = $user->page()->get();
+        $user = $this->user_repository->find($request_data['available_order']['avialable_page']['user_id']);
+
+        $page = $user->page()->first();
+
         return $page;
     }
 }

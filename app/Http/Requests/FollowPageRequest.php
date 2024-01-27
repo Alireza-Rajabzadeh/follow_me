@@ -22,7 +22,7 @@ class FollowPageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "page_id" =>"required|integer"
+            "order_id" =>"required|integer"
         ];
     }
 }
