@@ -168,9 +168,9 @@ class OrderService
 
         $user = ($order->user()->first());
 
-        $page = $user->page()->first();
+        $user['page'] = $user->page()->first();
 
-        return $page->id;
+        return $user;
     }
 
     function isOrderOpen($order)
